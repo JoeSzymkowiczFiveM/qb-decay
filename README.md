@@ -44,4 +44,4 @@ I left a `testdecay` command for players with `god` permission, that can manuall
 - Integrating it with Inventory would also technically give it access to `Drops`, and could be applied to those tables too, to prevent players from exploiting, as this is a place where items could exist and not be affected by decay.
 
 ## Qbus.xyz Discord:
-[Discord](https://discord.gg/Gec9kBKwcB)
+[Discord](https://discord.gg/jTsrKaV6As)
