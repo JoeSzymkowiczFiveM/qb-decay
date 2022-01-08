@@ -2,7 +2,7 @@
 This is a proof-of-concept for a server-sided item degradation system that uses a cron schedule, and run whether players are on or not. This can adjust qualities of items in player inventories, stashes, gloveboxes and trunks. I found adjustements needed to be made to the inventory js, for this to make sense. In this example, I've added a `degrade` value on the shared.lua `QBShared.Items` table. If no amount is set, it will not degrade the item.
 
 ## Acknowledgment
-Thanks to [mknzz](https://github.com/mknzz/qb-durability) for the locations in the invetory javascript to comment, to display Quality in the inventory. Shoutout to sgtherbz and Griefa for helping test.
+Thanks to [mknzz](https://github.com/mknzz/qb-durability) for the locations in the inventory javascript to comment, to display Quality on all items. Shoutout to sgtherbz and SnipeOP for helping test.
 
 ![](https://i.imgur.com/zppoJPE.png)
 ## Usage
