@@ -28,6 +28,8 @@ Place the following code at the top:
     toData.info.quality = fromData.info.quality
 }`
 
+I left a `testdecay` command for players with `god` permission, that can manually trigger the degradation event.
+
 To make sense, this would probably require a check in a LOT of places to see if the used item is Broken or not. Implementing it in the core's `CreateUseableItem` function, is pretty straight-forward, but items can be consumed/used/combined/crafted/etc in other ways than that, and would need this check there. This POC is only to provide the decay mechanism and will not include code changes needed elsewhere for that sanity-checking and implementation; that's up to you.
 
 ## Dependencies
