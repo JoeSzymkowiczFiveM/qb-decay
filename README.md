@@ -12,7 +12,7 @@ Set the hours of the day that you want the decay to occur, this is according to 
 ["degrade"] = 1.0
 `
 
-Comment out all the locations listed in [this](https://github.com/mknzz/qb-inventory/commit/5bc5e2016e2b44d18fb2568d108b874c5e208e47). These locations may be different depending on the inventory you're using. You can start to see the pattern.
+Depending on the inventory system you are using, you might need to comment out all the locations listed in [this](https://github.com/mknzz/qb-inventory/commit/5bc5e2016e2b44d18fb2568d108b874c5e208e47). These locations may be different depending on the inventory you're using. You can start to see the pattern.
 
 This was just personal preference and needed for the v3 qb-inventory script I'm using, but I wanted stacked items to have the lower of the two items' Quality, to prevent exploitation and the following code change does that. Within the following block:
 
@@ -28,9 +28,10 @@ Place the following code at the top:
     toData.info.quality = fromData.info.quality
 }`
 
-To make sense, this would probably require a check in a LOT of places to see if the used item is Broken or not. Implementing it in the core's `CreateUseableItem` function, is pretty straight-forward, but items can be consumed/used/combined/crafted/etc in other ways than that, and would need this check there. This POC is only to provide the decay data change and will not include code changes needed elsewhere for that sanity-checking; that's up to you.
+To make sense, this would probably require a check in a LOT of places to see if the used item is Broken or not. Implementing it in the core's `CreateUseableItem` function, is pretty straight-forward, but items can be consumed/used/combined/crafted/etc in other ways than that, and would need this check there. This POC is only to provide the decay mechanism and will not include code changes needed elsewhere for that sanity-checking and implementation; that's up to you.
 
 ## Dependencies
+- [oxmysql](https://github.com/overextended/oxmysql) (Written for ver. 1.8.7, I know they've dont a syntax change since then.)
 - [cron](https://github.com/esx-framework/cron)
 
 ## TODO
