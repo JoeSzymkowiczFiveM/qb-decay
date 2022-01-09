@@ -22,8 +22,7 @@ function DegradeInventoryItems()
             if isOnline then
                 items = isOnline.PlayerData.items
 
-                for l = 1, #items, 1 do
-                    item = items[l]
+                for a, item in pairs(items) do
                     local itemInfo = QBCore.Shared.Items[item.name:lower()]
                     if item.info ~= nil and item.info.quality ~= nil then
                         local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
