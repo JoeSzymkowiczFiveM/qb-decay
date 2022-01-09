@@ -2,7 +2,7 @@
 This is a proof-of-concept for a server-sided item degradation system that uses a cron schedule, and run whether players are on or not. This can adjust qualities of items in player inventories, stashes, gloveboxes and trunks. I found adjustements needed to be made to the inventory js, for this to make sense. In this example, I've added a `degrade` value on the shared.lua `QBShared.Items` table. If no amount is set, it will not degrade the item.
 
 ## Acknowledgment
-Thanks to [mknzz](https://github.com/mknzz/qb-durability) for the locations in the invetory javascript to comment, to display Quality in the inventory. Shoutout to sgtherbz and Griefa for helping test.
+Thanks to [mknzz](https://github.com/mknzz/qb-durability) for the locations in the inventory javascript to comment, to display Quality on all items. Shoutout to sgtherbz and SnipeOP for helping test.
 
 ![](https://i.imgur.com/zppoJPE.png)
 ## Usage
@@ -30,6 +30,9 @@ Place the following code at the top:
 
 To make sense, this would probably require a check in a LOT of places to see if the used item is Broken or not. Implementing it in the core's `CreateUseableItem` function, is pretty straight-forward, but items can be consumed/used/combined/crafted/etc in other ways than that, and would need this check there. This POC is only to provide the decay mechanism and will not include code changes needed elsewhere for that sanity-checking and implementation; that's up to you.
 
+## Commands
+I left a `testdecay` command for players with `god` permission, that can manually trigger the degradation event.
+
 ## Dependencies
 - [oxmysql](https://github.com/overextended/oxmysql) (Written for ver. 1.8.7, I know they've dont a syntax change since then.)
 - [cron](https://github.com/esx-framework/cron)
@@ -41,4 +44,4 @@ To make sense, this would probably require a check in a LOT of places to see if 
 - Integrating it with Inventory would also technically give it access to `Drops`, and could be applied to those tables too, to prevent players from exploiting, as this is a place where items could exist and not be affected by decay.
 
 ## Qbus.xyz Discord:
-[Discord](https://discord.gg/Gec9kBKwcB)
+[Discord](https://discord.gg/jTsrKaV6As)
