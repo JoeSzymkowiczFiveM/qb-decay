@@ -10,62 +10,104 @@ QBCore.Commands.Add("testdecay", "Description", {}, true, function(source, args)
 end, "god")
 
 function DegradeInventoryItems()
-    local results = exports.oxmysql:executeSync('SELECT * FROM players', {})
+    local results = exports.oxmysql:executeSync('SELECT citizenid, inventory FROM players', {})
 	if results[1] ~= nil then
         local citizenid = nil
         for k = 1, #results, 1 do
             row = results[k]
             citizenid = row.citizenid
-            local items = {}
-            if row.inventory ~= nil then
-                row.inventory = json.decode(row.inventory)
-                if row.inventory ~= nil then 
-                    for l = 1, #row.inventory, 1 do
-                        item = row.inventory[l]
-                        local itemInfo = QBCore.Shared.Items[item.name:lower()]
-                        if item.info ~= nil and item.info.quality ~= nil then
-                            local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
-                            if item.info.quality == 0.0 then
-                                --do nothing
-                            elseif (item.info.quality - degradeAmount) > 0.0 then
-                                item.info.quality = item.info.quality - degradeAmount
-                            elseif (item.info.quality - degradeAmount) < 0.0 then
-                                item.info.quality = 0.0
-                            end
-                        else
-                            if type(item.info) == 'table' then
-                                item.info.quality = 100.0
-                            elseif type(item.info) == 'string' and item.info == '' then
-                                item.info = {}
-                                item.info.quality = 100.0
-                            end
+            local sentItems = {}
+            local items = nil
+            local isOnline = QBCore.Functions.GetPlayerByCitizenId(citizenid)
+            if isOnline then
+                items = isOnline.PlayerData.items
 
+                for l = 1, #items, 1 do
+                    item = items[l]
+                    local itemInfo = QBCore.Shared.Items[item.name:lower()]
+                    if item.info ~= nil and item.info.quality ~= nil then
+                        local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
+                        if item.info.quality == 0.0 then
+                            --do nothing
+                        elseif (item.info.quality - degradeAmount) > 0.0 then
+                            item.info.quality = item.info.quality - degradeAmount
+                        elseif (item.info.quality - degradeAmount) < 0.0 then
+                            item.info.quality = 0.0
                         end
+                    else
+                        if type(item.info) == 'table' then
+                            item.info.quality = 100.0
+                        elseif type(item.info) == 'string' and item.info == '' then
+                            item.info = {}
+                            item.info.quality = 100.0
+                        end
+                    end
+        
+                    local modifiedItem = {
+                        name = itemInfo["name"],
+                        amount = tonumber(item.amount),
+                        info = item.info ~= nil and item.info or "",
+                        label = itemInfo["label"],
+                        description = itemInfo["description"] ~= nil and itemInfo["description"] or "",
+                        weight = itemInfo["weight"], 
+                        type = itemInfo["type"], 
+                        unique = itemInfo["unique"], 
+                        useable = itemInfo["useable"], 
+                        image = itemInfo["image"],
+                        slot = item.slot,
+                    }
+        
+                    table.insert(sentItems, modifiedItem)
+                end
 
-                        local modifiedItem = {
-                            name = itemInfo["name"],
-                            amount = tonumber(item.amount),
-                            info = item.info ~= nil and item.info or "",
-                            label = itemInfo["label"],
-                            description = itemInfo["description"] ~= nil and itemInfo["description"] or "",
-                            weight = itemInfo["weight"], 
-                            type = itemInfo["type"], 
-                            unique = itemInfo["unique"], 
-                            useable = itemInfo["useable"], 
-                            image = itemInfo["image"],
-                            slot = item.slot,
-                        }
+                isOnline.Functions.SetInventory(sentItems)
+                TriggerClientEvent("inventory:client:UpdatePlayerInventory", isOnline.PlayerData.source, false)
+            else
+                if row.inventory ~= nil then
+                    row.inventory = json.decode(row.inventory)
+                    if row.inventory ~= nil then 
+                        for l = 1, #row.inventory, 1 do
+                            item = row.inventory[l]
+                            local itemInfo = QBCore.Shared.Items[item.name:lower()]
+                            if item.info ~= nil and item.info.quality ~= nil then
+                                local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
+                                if item.info.quality == 0.0 then
+                                    --do nothing
+                                elseif (item.info.quality - degradeAmount) > 0.0 then
+                                    item.info.quality = item.info.quality - degradeAmount
+                                elseif (item.info.quality - degradeAmount) < 0.0 then
+                                    item.info.quality = 0.0
+                                end
+                            else
+                                if type(item.info) == 'table' then
+                                    item.info.quality = 100.0
+                                elseif type(item.info) == 'string' and item.info == '' then
+                                    item.info = {}
+                                    item.info.quality = 100.0
+                                end
+                            end
 
-                        table.insert(items, modifiedItem)
+                            local modifiedItem = {
+                                name = itemInfo["name"],
+                                amount = tonumber(item.amount),
+                                info = item.info ~= nil and item.info or "",
+                                label = itemInfo["label"],
+                                description = itemInfo["description"] ~= nil and itemInfo["description"] or "",
+                                weight = itemInfo["weight"], 
+                                type = itemInfo["type"], 
+                                unique = itemInfo["unique"], 
+                                useable = itemInfo["useable"], 
+                                image = itemInfo["image"],
+                                slot = item.slot,
+                            }
+
+                            table.insert(sentItems, modifiedItem)
+                        end
+                        exports.oxmysql:execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode(sentItems), citizenid })
                     end
                 end
             end
-            exports.oxmysql:execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode(items), citizenid })
-            local isOnline = QBCore.Functions.GetPlayerByCitizenId(citizenid)
-            if isOnline then
-                isOnline.Functions.SetInventory(items)
-                TriggerClientEvent("inventory:client:UpdatePlayerInventory", isOnline.PlayerData.source, false)
-            end
+            Citizen.Wait(500)
         end
 	end
 end
@@ -122,6 +164,7 @@ function DegradeStashItems()
                 end
             end
             exports.oxmysql:execute('UPDATE stashitems SET items = ? WHERE id = ?', { json.encode(items), id })
+            Citizen.Wait(500)
         end
 	end
 end
@@ -178,6 +221,7 @@ function DegradeGloveboxItems()
                 end
             end
             exports.oxmysql:execute('UPDATE gloveboxitems SET items = ? WHERE id = ?', { json.encode(items), id })
+            Citizen.Wait(500)
         end
 	end
 end
@@ -234,14 +278,18 @@ function DegradeTrunkItems()
                 end
             end
             exports.oxmysql:execute('UPDATE trunkitems SET items = ? WHERE id = ?', { json.encode(items), id })
+            Citizen.Wait(500)
         end
 	end
 end
 
 function DegradeAllTables()
     DegradeInventoryItems()
+    Citizen.Wait(500)
     DegradeStashItems()
+    Citizen.Wait(500)
     DegradeTrunkItems()
+    Citizen.Wait(500)
     DegradeGloveboxItems()
 end
 
