@@ -68,39 +68,41 @@ function DegradeInventoryItems()
                         for l = 1, #row.inventory, 1 do
                             item = row.inventory[l]
                             local itemInfo = QBCore.Shared.Items[item.name:lower()]
-                            if item.info ~= nil and item.info.quality ~= nil then
-                                local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
-                                if item.info.quality == 0.0 then
-                                    --do nothing
-                                elseif (item.info.quality - degradeAmount) > 0.0 then
-                                    item.info.quality = item.info.quality - degradeAmount
-                                elseif (item.info.quality - degradeAmount) < 0.0 then
-                                    item.info.quality = 0.0
+                            if itemInfo ~= nil then
+                                if item.info ~= nil and item.info.quality ~= nil then
+                                    local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
+                                    if item.info.quality == 0.0 then
+                                        --do nothing
+                                    elseif (item.info.quality - degradeAmount) > 0.0 then
+                                        item.info.quality = item.info.quality - degradeAmount
+                                    elseif (item.info.quality - degradeAmount) < 0.0 then
+                                        item.info.quality = 0.0
+                                    end
+                                else
+                                    if type(item.info) == 'table' then
+                                        item.info.quality = 100.0
+                                    elseif type(item.info) == 'string' and item.info == '' then
+                                        item.info = {}
+                                        item.info.quality = 100.0
+                                    end
                                 end
-                            else
-                                if type(item.info) == 'table' then
-                                    item.info.quality = 100.0
-                                elseif type(item.info) == 'string' and item.info == '' then
-                                    item.info = {}
-                                    item.info.quality = 100.0
-                                end
+
+                                local modifiedItem = {
+                                    name = itemInfo["name"],
+                                    amount = tonumber(item.amount),
+                                    info = item.info ~= nil and item.info or "",
+                                    label = itemInfo["label"],
+                                    description = itemInfo["description"] ~= nil and itemInfo["description"] or "",
+                                    weight = itemInfo["weight"], 
+                                    type = itemInfo["type"], 
+                                    unique = itemInfo["unique"], 
+                                    useable = itemInfo["useable"], 
+                                    image = itemInfo["image"],
+                                    slot = item.slot,
+                                }
+
+                                table.insert(sentItems, modifiedItem)
                             end
-
-                            local modifiedItem = {
-                                name = itemInfo["name"],
-                                amount = tonumber(item.amount),
-                                info = item.info ~= nil and item.info or "",
-                                label = itemInfo["label"],
-                                description = itemInfo["description"] ~= nil and itemInfo["description"] or "",
-                                weight = itemInfo["weight"], 
-                                type = itemInfo["type"], 
-                                unique = itemInfo["unique"], 
-                                useable = itemInfo["useable"], 
-                                image = itemInfo["image"],
-                                slot = item.slot,
-                            }
-
-                            table.insert(sentItems, modifiedItem)
                         end
                         MySQL.Async.execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode(sentItems), citizenid })
                     end
