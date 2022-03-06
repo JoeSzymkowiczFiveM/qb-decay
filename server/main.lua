@@ -10,7 +10,7 @@ QBCore.Commands.Add("testdecay", "Description", {}, true, function(source, args)
 end, "god")
 
 function DegradeInventoryItems()
-    local results = exports.oxmysql:executeSync('SELECT citizenid, inventory FROM players', {})
+    local results = MySQL.Sync.fetchAll('SELECT citizenid, inventory FROM players', {})
 	if results[1] ~= nil then
         local citizenid = nil
         for k = 1, #results, 1 do
@@ -102,7 +102,7 @@ function DegradeInventoryItems()
 
                             table.insert(sentItems, modifiedItem)
                         end
-                        exports.oxmysql:execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode(sentItems), citizenid })
+                        MySQL.Async.execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode(sentItems), citizenid })
                     end
                 end
             end
@@ -112,7 +112,7 @@ function DegradeInventoryItems()
 end
 
 function DegradeStashItems()
-    local results = exports.oxmysql:executeSync('SELECT * FROM stashitems', {})
+    local results = MySQL.Sync.fetchAll('SELECT * FROM stashitems', {})
 	if results[1] ~= nil then
         local id = nil
         for k = 1, #results, 1 do
@@ -122,7 +122,7 @@ function DegradeStashItems()
             if row.items ~= nil then
                 row.items = json.decode(row.items)
                 if row.items ~= nil then 
-                    for l = 1, #row.items, 1 do
+                    for l, p in pairs(row.items) do
                         item = row.items[l]
                         local itemInfo = QBCore.Shared.Items[item.name:lower()]
                         if item.info ~= nil and item.info.quality ~= nil then
@@ -162,14 +162,14 @@ function DegradeStashItems()
                     end
                 end
             end
-            exports.oxmysql:execute('UPDATE stashitems SET items = ? WHERE id = ?', { json.encode(items), id })
+            MySQL.Async.execute('UPDATE stashitems SET items = ? WHERE id = ?', { json.encode(items), id })
             Citizen.Wait(500)
         end
 	end
 end
 
 function DegradeGloveboxItems()
-    local results = exports.oxmysql:executeSync('SELECT * FROM gloveboxitems', {})
+    local results = MySQL.Sync.fetchAll('SELECT * FROM gloveboxitems', {})
 	if results[1] ~= nil then
         local id = nil
         for k = 1, #results, 1 do
@@ -179,7 +179,7 @@ function DegradeGloveboxItems()
             if row.items ~= nil then
                 row.items = json.decode(row.items)
                 if row.items ~= nil then 
-                    for l = 1, #row.items, 1 do
+                    for l, p in pairs(row.items) do
                         item = row.items[l]
                         local itemInfo = QBCore.Shared.Items[item.name:lower()]
                         if item.info ~= nil and item.info.quality ~= nil then
@@ -219,14 +219,14 @@ function DegradeGloveboxItems()
                     end
                 end
             end
-            exports.oxmysql:execute('UPDATE gloveboxitems SET items = ? WHERE id = ?', { json.encode(items), id })
+            MySQL.Async.execute('UPDATE gloveboxitems SET items = ? WHERE id = ?', { json.encode(items), id })
             Citizen.Wait(500)
         end
 	end
 end
 
 function DegradeTrunkItems()
-    local results = exports.oxmysql:executeSync('SELECT * FROM trunkitems', {})
+    local results = MySQL.Sync.fetchAll('SELECT * FROM trunkitems', {})
 	if results[1] ~= nil then
         local id = nil
         for k = 1, #results, 1 do
@@ -236,7 +236,7 @@ function DegradeTrunkItems()
             if row.items ~= nil then
                 row.items = json.decode(row.items)
                 if row.items ~= nil then
-                    for l = 1, #row.items, 1 do
+                    for l, p in pairs(row.items) do
                         item = row.items[l]
                         local degradeAmount = QBCore.Shared.Items[item.name:lower()]["degrade"] ~= nil and QBCore.Shared.Items[item.name:lower()]["degrade"] or 0.0
                         local itemInfo = QBCore.Shared.Items[item.name:lower()]
@@ -276,7 +276,7 @@ function DegradeTrunkItems()
                     end
                 end
             end
-            exports.oxmysql:execute('UPDATE trunkitems SET items = ? WHERE id = ?', { json.encode(items), id })
+            MySQL.Async.execute('UPDATE trunkitems SET items = ? WHERE id = ?', { json.encode(items), id })
             Citizen.Wait(500)
         end
 	end
