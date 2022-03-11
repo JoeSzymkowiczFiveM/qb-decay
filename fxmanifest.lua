@@ -3,7 +3,7 @@ game 'gta5'
 
 name         'qb-decay'
 author       'Joe Szymkowicz'
-version      '0.0.2'
+version      '0.0.3'
 
 lua54 'yes'
 
@@ -12,6 +12,7 @@ dependencies {
 }
 
 server_scripts {
-    'config.lua',
+	'@oxmysql/lib/MySQL.lua',
+    	'config.lua',
 	'server/main.lua'
 }
