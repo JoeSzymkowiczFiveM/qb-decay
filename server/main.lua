@@ -30,7 +30,7 @@ function DegradeInventoryItems()
                             --do nothing
                         elseif (item.info.quality - degradeAmount) > 0.0 then
                             item.info.quality = item.info.quality - degradeAmount
-                        elseif (item.info.quality - degradeAmount) < 0.0 then
+                        elseif (item.info.quality - degradeAmount) <= 0.0 then
                             item.info.quality = 0.0
                         end
                     else
@@ -75,7 +75,7 @@ function DegradeInventoryItems()
                                         --do nothing
                                     elseif (item.info.quality - degradeAmount) > 0.0 then
                                         item.info.quality = item.info.quality - degradeAmount
-                                    elseif (item.info.quality - degradeAmount) < 0.0 then
+                                    elseif (item.info.quality - degradeAmount) <= 0.0 then
                                         item.info.quality = 0.0
                                     end
                                 else
@@ -133,7 +133,7 @@ function DegradeStashItems()
                                 --do nothing
                             elseif (item.info.quality - degradeAmount) > 0.0 then
                                 item.info.quality = item.info.quality - degradeAmount
-                            elseif (item.info.quality - degradeAmount) < 0.0 then
+                            elseif (item.info.quality - degradeAmount) <= 0.0 then
                                 item.info.quality = 0.0
                             end
                         else
@@ -190,7 +190,7 @@ function DegradeGloveboxItems()
                                 --do nothing
                             elseif (item.info.quality - degradeAmount) > 0.0 then
                                 item.info.quality = item.info.quality - degradeAmount
-                            elseif (item.info.quality - degradeAmount) < 0.0 then
+                            elseif (item.info.quality - degradeAmount) <= 0.0 then
                                 item.info.quality = 0.0
                             end
                         else
@@ -247,7 +247,7 @@ function DegradeTrunkItems()
                                 --do nothing
                             elseif (item.info.quality - degradeAmount) > 0.0 then
                                 item.info.quality = item.info.quality - degradeAmount
-                            elseif (item.info.quality - degradeAmount) < 0.0 then
+                            elseif (item.info.quality - degradeAmount) <= 0.0 then
                                 item.info.quality = 0.0
                             end
                         else
