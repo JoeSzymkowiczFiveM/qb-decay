@@ -35,7 +35,8 @@ I left a `testdecay` command for players with `god` permission, that can manuall
 
 ## Dependencies
 - [oxmysql](https://github.com/overextended/oxmysql) (Written for ver. 1.8.7, I know they've dont a syntax change since then.)
-- [cron](https://github.com/esx-framework/cron)
+- [ox_lib](https://github.com/overextended/ox_lib)
+- 
 
 ## TODO
 - Lots of oppurtunity for code cleanup. It's currently very repetitive and dirty.
@@ -43,5 +44,5 @@ I left a `testdecay` command for players with `god` permission, that can manuall
 - Needs checking for if stashes or player inventories are currently opened by a played. This decay code could could be placed in the inventory, and would have direct access to those values.
 - Integrating it with Inventory would also technically give it access to `Drops`, and could be applied to those tables too, to prevent players from exploiting, as this is a place where items could exist and not be affected by decay.
 
-## Qbus.xyz Discord:
-[Discord](https://discord.gg/jTsrKaV6As)
+## Discord
+[Joe Szymkowicz FiveM Development](https://discord.gg/5vPGxyCB4z)
