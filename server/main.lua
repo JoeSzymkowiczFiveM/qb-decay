@@ -294,9 +294,6 @@ function DegradeAllTables()
     DegradeGloveboxItems()
 end
 
-Citizen.CreateThread(function()
-    for k = 1, #Config.Times, 1 do
-        time = Config.Times[k]
-        TriggerEvent('cron:runAt', time, 00, DegradeAllTables)
-    end
+lib.cron.new('* 10,22 * * *', function()
+    DegradeAllTables()
 end)
