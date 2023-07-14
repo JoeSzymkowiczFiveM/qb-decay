@@ -36,7 +36,6 @@ I left a `testdecay` command for players with `god` permission, that can manuall
 ## Dependencies
 - [oxmysql](https://github.com/overextended/oxmysql) (Written for ver. 1.8.7, I know they've dont a syntax change since then.)
 - [ox_lib](https://github.com/overextended/ox_lib)
-- 
 
 ## TODO
 - Lots of oppurtunity for code cleanup. It's currently very repetitive and dirty.
