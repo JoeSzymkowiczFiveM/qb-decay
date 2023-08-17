@@ -1,3 +1,8 @@
+## UPDATE
+I have released my entire edit of qb-inventory with the updated decay code, among other added features.
+
+[qb-inventory](https://github.com/JoeSzymkowiczFiveM/qb-inventory)
+
 ## Description
 This is a proof-of-concept for a server-sided item degradation system that uses a cron schedule, and run whether players are on or not. This can adjust qualities of items in player inventories, stashes, gloveboxes and trunks. I found adjustements needed to be made to the inventory js, for this to make sense. In this example, I've added a `degrade` value on the shared.lua `QBShared.Items` table. If no amount is set, it will not degrade the item.
 
