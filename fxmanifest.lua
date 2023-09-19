@@ -3,12 +3,12 @@ game 'gta5'
 
 name         'qb-decay'
 author       'Joe Szymkowicz'
-version      '0.0.3'
+version      '0.0.4'
 
 lua54 'yes'
 
-dependencies {
-	"cron",
+shared_scripts {
+    '@ox_lib/init.lua',
 }
 
 server_scripts {
